@@ -1,5 +1,5 @@
 def p1(inp):
-    return max(inp)
+    return inp[-1]
 
 
 def p2(inp):
