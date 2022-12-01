@@ -1,41 +1,19 @@
 def p1(inp):
-    temp = 0
-    maximum = 0
-
-    for line in inp:
-        if line != '':
-            temp += int(line)
-        else:
-            if temp > maximum:
-                maximum = temp
-            temp = 0
-    if temp > maximum:
-        maximum = temp
-
-    return maximum
+    return max(inp)
 
 
 def p2(inp):
-    temp = 0
-    calories = []
-
-    for line in inp:
-        if line != '':
-            temp += int(line)
-        else:
-            calories.append(temp)
-            temp = 0
-
-    calories.append(temp)
-    ordered = sorted(calories)
-
-    return ordered[-1] + ordered[-2] + ordered[-3]
+    return sum(inp[-3:])
 
 
 with open('../../input/week1/day1.txt') as file:
-    inp = []
-    for line in file:
-        inp.append(line.strip())
+    line_tuples = file.read().split('\n\n')
+    calorie_tuples = [line_tuple.strip().split('\n') for line_tuple in line_tuples]
+    calorie_sums = []
+    for calorie_tuple in calorie_tuples:
+        calorie_sum = sum([int(calorie_count) for calorie_count in calorie_tuple])
+        calorie_sums.append(calorie_sum)
+    calorie_sums = sorted(calorie_sums)
 
-    print('part 1: {}'.format(p1(inp)))
-    print('part 2: {}'.format(p2(inp)))
+    print('part 1: {}'.format(p1(calorie_sums)))
+    print('part 2: {}'.format(p2(calorie_sums)))
