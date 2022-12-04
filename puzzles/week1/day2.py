@@ -33,10 +33,10 @@ def p2(inp):
 
 
 with open('../../input/week1/day2.txt') as file:
-    inp = []
+    guides = []
     for line in file:
         (first, second) = line.strip().split(' ')
-        inp.append((first, second))
+        guides.append((first, second))
 
-    print('part 1: {}'.format(p1(inp)))
-    print('part 2: {}'.format(p2(inp)))
+    print('part 1: {}'.format(p1(guides)))
+    print('part 2: {}'.format(p2(guides)))
