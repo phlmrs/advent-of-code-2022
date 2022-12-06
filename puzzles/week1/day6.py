@@ -1,12 +1,12 @@
 def p1(inp):
-    return findMarkerPos(inp, 4)
+    return find_marker_pos(inp, 4)
 
 
 def p2(inp):
-    return findMarkerPos(inp, 14)
+    return find_marker_pos(inp, 14)
 
 
-def findMarkerPos(data, markerLen):
+def find_marker_pos(data, markerLen):
     for i in range(len(data) - markerLen - 1):
         if len(set(data[i:i + markerLen])) == markerLen:
             return i + markerLen
