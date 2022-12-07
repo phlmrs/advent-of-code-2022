@@ -1,9 +1,18 @@
 def p1(inp):
-    return 0
+    res = 0
+    for folder_size in inp.values():
+        if folder_size[0] <= 100000:
+            res += folder_size[0]
+    return res
 
 
 def p2(inp):
-    return 0
+    to_clear = 30000000 - (70000000 - inp['/'][0])
+    delete_candidates = []
+    for folder_size in inp.values():
+        if folder_size[0] >= to_clear:
+            delete_candidates.append(folder_size[0])
+    return min(delete_candidates)
 
 
 def get_subfolder_size(sub_folder):
@@ -17,32 +26,44 @@ def get_subfolder_size(sub_folder):
     return folder_size
 
 
+def get_parent(folder_path):
+    history = folder_path.split('_')
+    res = ''
+    for item in history[:-1]:
+        res = res + item + '_'
+    return res.rstrip('_')
+
+
 with open('../../input/week1/day7.txt') as file:
     filesystem = {'/': []}
-    current_dir = ''
+    current_path = ''
+
     for line in file.readlines():
         cmd = line.strip().split(' ')
+
         if cmd[1] == 'cd':
+            if current_path == '':
+                current_path = '/'
+                continue
             if cmd[2] == '..':
-                history = current_dir.split('_')
-                current_dir = ''
-                for item in history[:-1]:
-                    current_dir = current_dir + item + '_'
-                current_dir = current_dir.rstrip('_')
+                current_path = get_parent(current_path)
                 continue
-            if current_dir == '':
-                current_dir = '/'
-                continue
-            elif current_dir + '_' + cmd[2] not in filesystem:
-                filesystem[current_dir + '_' + cmd[2]] = []
-            current_dir = current_dir + '_' + cmd[2]
+
+            new_path = current_path + '_' + cmd[2]
+            if new_path not in filesystem:
+                filesystem[new_path] = []
+            current_path = new_path
+
         elif cmd[1] == 'ls':
             continue
+
         elif cmd[0] == 'dir':
-            if (current_dir + '_' + cmd[1]) not in filesystem[current_dir] and (current_dir + '_' + cmd[1]) != current_dir:
-                filesystem[current_dir].append(current_dir + '_' + cmd[1])
+            new_path = current_path + '_' + cmd[1]
+            if new_path not in filesystem[current_path]:
+                filesystem[current_path].append(new_path)
+
         elif cmd[0].isalnum():
-            filesystem[current_dir].append(int(cmd[0]))
+            filesystem[current_path].append(int(cmd[0]))
 
     for folder in filesystem:
         folder_size = 0
@@ -53,12 +74,5 @@ with open('../../input/week1/day7.txt') as file:
                 folder_size += get_subfolder_size(item)
         filesystem[folder] = [folder_size]
 
-    res = 0
-    for folder_size in filesystem.values():
-        if folder_size[0] <= 100000:
-            res += folder_size[0]
-
-    print(res)
-
-    print('part 1: {}'.format(p1([])))
-    print('part 2: {}'.format(p2([])))
+    print('part 1: {}'.format(p1(filesystem)))
+    print('part 2: {}'.format(p2(filesystem)))
